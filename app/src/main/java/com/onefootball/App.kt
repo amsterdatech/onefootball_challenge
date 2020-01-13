@@ -14,13 +14,9 @@ class App : Application() {
         lateinit var instance: App
             private set
 
-        fun newsJson(): String {
-            return instance.assets.open("news.json")
-                .bufferedReader()
-                .use {
-                    it.readText()
-                }
-        }
+        const val IO_SCHEDULER = "IO_SCHEDULER"
+        const val MAIN_SCHEDULER = "MAIN_SCHEDULER"
+        const val LOCAL_SOURCE = "LOCAL_SOURCE"
     }
 
     override fun onCreate() {
