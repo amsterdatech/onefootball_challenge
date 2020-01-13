@@ -13,24 +13,30 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import coil.api.load
 import com.onefootball.model.News
+import com.onefootball.ui.MarginItemDecoration
+import com.onefootball.ui.NewsAdapter
+import kotlinx.android.synthetic.main.activity_main.*
 import org.json.JSONArray
 import org.json.JSONObject
 import java.nio.charset.Charset
 
 class MyNewsActivity : AppCompatActivity() {
 
-    var jsonString : String? = null
-    lateinit var recyclerView: RecyclerView
-    lateinit var myAdapter: NewsAdapter
+    private val adapter by lazy {
+        NewsAdapter {
+            startActivity(
+                    Intent(Intent.ACTION_VIEW, Uri.parse(it.newsLink))
+            )
+        }
+    }
+
+    var jsonString: String? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
+        setTheme(R.style.AppTheme)
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        recyclerView = findViewById(R.id.newsRecyclerView)
-        myAdapter = NewsAdapter()
-        with(recyclerView) {
-            adapter = myAdapter
-            layoutManager = LinearLayoutManager(this@MyNewsActivity)
-        }
+        setupRecyclerView()
     }
 
     override fun onResume() {
@@ -43,15 +49,16 @@ class MyNewsActivity : AppCompatActivity() {
         jsonString = buffer.toString(Charset.defaultCharset())
 
         val items = parseJsonString(jsonString!!)
-        myAdapter.setNewsItems(items)
+
+        adapter.items += items as List<News>
+        adapter.notifyDataSetChanged()
     }
 
     private fun parseJsonString(jsonString: String): List<News> {
         val mainObject = JSONObject(jsonString)
         val newsItems = mutableListOf<News>()
         val newsArray = mainObject.getJSONArray("news")
-        newsArray.forEach {
-            newsObject ->
+        newsArray.forEach { newsObject ->
             val title = newsObject.getString("title")
             val imageURL = newsObject.getString("image_url")
             val resourceName = newsObject.getString("resource_name")
@@ -62,46 +69,18 @@ class MyNewsActivity : AppCompatActivity() {
         }
         return newsItems
     }
-}
 
-
-class NewsAdapter: RecyclerView.Adapter<NewsAdapter.NewsViewHolder>() {
-
-    private val newsItems = ArrayList<News>()
-
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): NewsViewHolder {
-        val view = LayoutInflater.from(parent.context).inflate(R.layout.news_item, parent, false)
-        return NewsViewHolder(view)
-    }
-
-    override fun getItemCount() = newsItems.size
-
-    override fun onBindViewHolder(holder: NewsViewHolder, position: Int) {
-        val news = newsItems[position]
-
-        holder.titleView.text = news.title
-        holder.newsView.load(url = news.imageURL)
-        holder.resourceImage.load(url = news.resourceURL)
-        holder.resourceName.text = news.resourceName
-        holder.itemView.setOnClickListener {
-            it.context.startActivity(
-                Intent(Intent.ACTION_VIEW, Uri.parse(news.newsLink))
+    private fun setupRecyclerView() {
+        with(activity_news_recycler_view) {
+            layoutManager =
+                    LinearLayoutManager(this@MyNewsActivity, LinearLayoutManager.VERTICAL, false)
+            addItemDecoration(
+                    MarginItemDecoration(
+                            resources.getDimension(R.dimen.activity_vertical_margin).toInt()
+                    )
             )
+            adapter = this@MyNewsActivity.adapter
         }
-    }
-
-    fun setNewsItems(newListOfNewsItems: List<News>) {
-        newsItems.clear()
-        newsItems.addAll(newListOfNewsItems)
-        notifyDataSetChanged()
-    }
-
-    class NewsViewHolder(itemView: View): RecyclerView.ViewHolder(itemView) {
-
-        var titleView: TextView = itemView.findViewById(R.id.news_title)
-        var newsView: ImageView = itemView.findViewById(R.id.news_view)
-        var resourceImage: ImageView = itemView.findViewById(R.id.resource_icon)
-        var resourceName: TextView = itemView.findViewById(R.id.resource_name)
     }
 }
 
