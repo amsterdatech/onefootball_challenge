@@ -2,18 +2,18 @@ package com.onefootball.ui
 
 import android.annotation.SuppressLint
 import androidx.lifecycle.*
+import com.onefootball.commons.SingleLiveEvent
 import com.onefootball.data.NewsRepository
 import com.onefootball.ui.model.News
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 
-class NewsViewModel : ViewModel(), LifecycleObserver {
+class NewsViewModel(private val repository: NewsRepository) : ViewModel(), LifecycleObserver {
 
     val loading = MutableLiveData<Boolean>()
-    val error = MutableLiveData<Throwable>()
+    val error = MutableLiveData<SingleLiveEvent<Throwable>>()
     val success = MutableLiveData<List<News>>()
 
-    val repository = NewsRepository()
 
     private val compositeDisposable: CompositeDisposable by lazy {
         CompositeDisposable()
@@ -36,7 +36,7 @@ class NewsViewModel : ViewModel(), LifecycleObserver {
                     success.value = it
                 },
                 {
-                    error.value = it
+                    error.value = SingleLiveEvent(it)
                 }
             )
             .apply {
