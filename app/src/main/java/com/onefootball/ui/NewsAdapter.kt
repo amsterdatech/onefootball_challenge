@@ -1,16 +1,12 @@
 package com.onefootball.ui
 
-import android.content.Intent
-import android.net.Uri
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
-import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import coil.api.load
 import com.onefootball.R
-import com.onefootball.model.News
+import com.onefootball.ui.model.News
 import kotlinx.android.synthetic.main.news_item.view.*
 import kotlin.properties.Delegates
 

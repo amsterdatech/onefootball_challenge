@@ -39,6 +39,9 @@ class NewsViewModel : ViewModel(), LifecycleObserver {
                     error.value = it
                 }
             )
+            .apply {
+                compositeDisposable.add(this)
+            }
     }
 
 
