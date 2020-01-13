@@ -1,4 +1,4 @@
-package com.onefootball.ui
+package com.onefootball.commons
 
 import android.graphics.Rect
 import android.view.View

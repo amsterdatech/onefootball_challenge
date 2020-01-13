@@ -7,7 +7,7 @@ import androidx.recyclerview.widget.RecyclerView
 import coil.api.load
 import com.onefootball.R
 import com.onefootball.ui.model.News
-import kotlinx.android.synthetic.main.news_item.view.*
+import kotlinx.android.synthetic.main.news_card_item.view.*
 import kotlin.properties.Delegates
 
 class NewsAdapter(private val action: (News) -> Unit? = {}) :
@@ -15,10 +15,43 @@ class NewsAdapter(private val action: (News) -> Unit? = {}) :
 
     var items: List<News> by Delegates.observable(mutableListOf()) { _, _, _ -> notifyDataSetChanged() }
 
+    companion object {
+
+        const val LIST_ITEM_TYPE = 0
+        const val BANNER_TYPE = 1
+
+    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val view = LayoutInflater.from(parent.context).inflate(R.layout.news_item, parent, false)
-        return ViewHolder(view)
+        return when (viewType) {
+
+            BANNER_TYPE -> {
+                ViewHolder(
+                    LayoutInflater.from(parent.context).inflate(
+                        R.layout.news_card_item,
+                        parent,
+                        false
+                    )
+                )
+            }
+            else -> {
+                ViewHolder(
+                    LayoutInflater.from(parent.context).inflate(
+                        R.layout.news_list_item,
+                        parent,
+                        false
+                    )
+                )
+            }
+        }
+    }
+
+    override fun getItemViewType(position: Int): Int {
+        if (position == 0) {
+            return BANNER_TYPE
+        }
+
+        return LIST_ITEM_TYPE
     }
 
     override fun getItemCount() = items.size

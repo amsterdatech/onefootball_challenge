@@ -22,7 +22,7 @@
         android:layout_height="match_parent"
         android:visibility="gone"
         tools:context=".ui.NewsActivity"
-        tools:listitem="@layout/news_item"
+        tools:listitem="@layout/news_card_item"
         tools:visibility="gone"/>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

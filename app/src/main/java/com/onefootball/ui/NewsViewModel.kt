@@ -1,6 +1,5 @@
 package com.onefootball.ui
 
-import android.annotation.SuppressLint
 import androidx.lifecycle.*
 import com.onefootball.commons.SingleLiveEvent
 import com.onefootball.data.NewsRepository
@@ -18,7 +17,6 @@ class NewsViewModel(
     val success = MutableLiveData<List<News>>()
 
 
-    @SuppressLint("CheckResult")
     @OnLifecycleEvent(Lifecycle.Event.ON_START)
     fun loadNews() {
         repository

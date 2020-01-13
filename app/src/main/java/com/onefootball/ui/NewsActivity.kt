@@ -7,6 +7,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.onefootball.R
+import com.onefootball.commons.MarginItemDecoration
 import com.onefootball.extensions.hide
 import com.onefootball.extensions.show
 import com.onefootball.extensions.snackBar
