@@ -1,4 +1,8 @@
 <resources>
     <string name="app_name">OnefootballCodingChallenge</string>
     <string name="generic_error">Error ocurred</string>
+    <string name="not_found_activity">You do not have any applications available to perform the requested action.</string>
+    <string name="chooser_title">Complete action using</string>
+
+
 </resources>

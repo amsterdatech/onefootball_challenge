@@ -1,6 +1,7 @@
 package com.onefootball
 
 import android.app.Application
+import com.onefootball.commons.Browser
 import com.onefootball.di.repositoryModule
 import com.onefootball.di.viewModelModule
 import org.koin.android.ext.koin.androidContext
@@ -28,5 +29,8 @@ class App : Application() {
             androidLogger(Level.DEBUG)
             modules(listOf(viewModelModule, repositoryModule))
         }
+
+        Browser.warm(this)
+
     }
 }

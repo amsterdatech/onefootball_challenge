@@ -4,9 +4,12 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import androidx.browser.customtabs.CustomTabsIntent
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.onefootball.R
+import com.onefootball.commons.Browser
 import com.onefootball.commons.MarginItemDecoration
 import com.onefootball.extensions.hide
 import com.onefootball.extensions.show
@@ -18,9 +21,11 @@ class NewsActivity : AppCompatActivity() {
 
     private val adapter by lazy {
         NewsAdapter {
-            startActivity(
-                Intent(Intent.ACTION_VIEW, Uri.parse(it.newsLink))
-            )
+//            startActivity(
+//                Intent(Intent.ACTION_VIEW, Uri.parse(it.newsLink))
+//            )
+
+            Browser.openIntern(this@NewsActivity, it.newsLink)
         }
     }
 
