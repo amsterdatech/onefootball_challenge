@@ -13,7 +13,7 @@ import kotlin.properties.Delegates
 class NewsAdapter(private val action: (News) -> Unit? = {}) :
     RecyclerView.Adapter<NewsAdapter.ViewHolder>() {
 
-    var items: List<News> by Delegates.observable(mutableListOf()) { _, _, _ -> notifyDataSetChanged() }
+    var items: MutableList<News> by Delegates.observable(mutableListOf()) { _, _, _ -> notifyDataSetChanged() }
 
     companion object {
 
@@ -61,6 +61,10 @@ class NewsAdapter(private val action: (News) -> Unit? = {}) :
         holder.bind(news)
 
         holder.itemView.custom_view_news_content_root.setOnClickListener {
+            action.invoke(news)
+        }
+
+        holder.itemView.news_view.setOnClickListener{
             action.invoke(news)
         }
     }

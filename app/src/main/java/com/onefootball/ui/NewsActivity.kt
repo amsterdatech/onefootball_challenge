@@ -21,7 +21,7 @@ class NewsActivity : AppCompatActivity() {
 
     private val adapter by lazy {
         NewsAdapter {
-//            startActivity(
+//      startActivity(
 //                Intent(Intent.ACTION_VIEW, Uri.parse(it.newsLink))
 //            )
 
@@ -40,7 +40,9 @@ class NewsActivity : AppCompatActivity() {
 
         viewModel.success.observe(this, Observer {
             activity_news_recycler_view.show()
-            adapter.items += it
+
+            adapter.items.clear()
+            adapter.items.addAll(it)
             adapter.notifyDataSetChanged()
 
         })
