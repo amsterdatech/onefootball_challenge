@@ -4,13 +4,15 @@ import androidx.lifecycle.*
 import com.onefootball.commons.SingleLiveEvent
 import com.onefootball.data.NewsRepository
 import com.onefootball.ui.model.News
+import io.reactivex.Scheduler
 import io.reactivex.disposables.CompositeDisposable
-import org.koin.core.KoinComponent
 
 class NewsViewModel(
     private val repository: NewsRepository,
-    private val compositeDisposable: CompositeDisposable
-) : ViewModel(), LifecycleObserver, KoinComponent {
+    private val compositeDisposable: CompositeDisposable,
+    private val mainScheduler: Scheduler
+
+) : ViewModel(), LifecycleObserver {
 
     val loading = MutableLiveData<Boolean>()
     val error = MutableLiveData<SingleLiveEvent<Throwable>>()
@@ -21,17 +23,17 @@ class NewsViewModel(
     fun loadNews() {
         repository
             .getNews()
+            .observeOn(mainScheduler)
             .doOnSubscribe {
                 loading.value = true
             }
-            .doOnComplete {
-                loading.value = false
-            }
             .subscribe(
                 {
+                    loading.value = false
                     success.value = it
                 },
                 {
+                    loading.value = false
                     error.value = SingleLiveEvent(it)
                 }
             )

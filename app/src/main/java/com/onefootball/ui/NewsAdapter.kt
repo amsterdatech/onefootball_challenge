@@ -3,6 +3,7 @@ package com.onefootball.ui
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import coil.api.load
 import com.onefootball.R
@@ -13,13 +14,20 @@ import kotlin.properties.Delegates
 class NewsAdapter(private val action: (News) -> Unit? = {}) :
     RecyclerView.Adapter<NewsAdapter.ViewHolder>() {
 
-    var items: MutableList<News> by Delegates.observable(mutableListOf()) { _, _, _ -> notifyDataSetChanged() }
+    private var items: MutableList<News> = mutableListOf()
 
     companion object {
 
         const val LIST_ITEM_TYPE = 0
         const val BANNER_TYPE = 1
 
+    }
+
+    fun updateItems(news: List<News>) {
+        val result = DiffUtil.calculateDiff(NewsDiffUtils(news, items))
+        items.clear()
+        items.addAll(news)
+        result.dispatchUpdatesTo(this)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -64,7 +72,7 @@ class NewsAdapter(private val action: (News) -> Unit? = {}) :
             action.invoke(news)
         }
 
-        holder.itemView.news_view.setOnClickListener{
+        holder.itemView.news_view.setOnClickListener {
             action.invoke(news)
         }
     }

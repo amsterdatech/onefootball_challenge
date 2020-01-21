@@ -1,19 +1,17 @@
 package com.onefootball.ui
 
-import android.content.Intent
-import android.net.Uri
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import androidx.browser.customtabs.CustomTabsIntent
-import androidx.core.content.ContextCompat
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.onefootball.R
 import com.onefootball.commons.Browser
 import com.onefootball.commons.MarginItemDecoration
+import com.onefootball.commons.SingleLiveEvent
 import com.onefootball.extensions.hide
 import com.onefootball.extensions.show
 import com.onefootball.extensions.snackBar
+import com.onefootball.ui.model.News
 import kotlinx.android.synthetic.main.activity_main.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -21,10 +19,6 @@ class NewsActivity : AppCompatActivity() {
 
     private val adapter by lazy {
         NewsAdapter {
-//      startActivity(
-//                Intent(Intent.ACTION_VIEW, Uri.parse(it.newsLink))
-//            )
-
             Browser.openIntern(this@NewsActivity, it.newsLink)
         }
     }
@@ -39,24 +33,11 @@ class NewsActivity : AppCompatActivity() {
         lifecycle.addObserver(viewModel)
 
         viewModel.success.observe(this, Observer {
-            activity_news_recycler_view.show()
-
-            adapter.items.clear()
-            adapter.items.addAll(it)
-            adapter.notifyDataSetChanged()
-
+            handleSuccess(it)
         })
 
         viewModel.error.observe(this, Observer {
-            it?.getContentIfNotHandled()?.let {
-                activity_news_recycler_view.hide()
-                activity_news_loading.hide()
-                activity_news_root
-                    .snackBar(getString(R.string.generic_error)) {
-                        viewModel.loadNews()
-                    }
-                    .show()
-            }
+            handleError(it)
         })
 
         viewModel.loading.observe(this, Observer {
@@ -68,6 +49,23 @@ class NewsActivity : AppCompatActivity() {
         })
 
         setupRecyclerView()
+    }
+
+    private fun handleError(it: SingleLiveEvent<Throwable>?) {
+        it?.getContentIfNotHandled()?.let {
+            activity_news_recycler_view.hide()
+            activity_news_loading.hide()
+            activity_news_root
+                .snackBar(getString(R.string.generic_error)) {
+                    viewModel.loadNews()
+                }
+                .show()
+        }
+    }
+
+    private fun handleSuccess(it: List<News>) {
+        activity_news_recycler_view.show()
+        adapter.updateItems(it)
     }
 
     private fun setupRecyclerView() {

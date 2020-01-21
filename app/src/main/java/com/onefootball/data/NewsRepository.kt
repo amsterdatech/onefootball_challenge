@@ -1,8 +1,8 @@
 package com.onefootball.data
 
 import com.onefootball.ui.model.News
-import io.reactivex.Observable
+import io.reactivex.Single
 
 interface NewsRepository {
-    fun getNews(): Observable<List<News>>
+    fun getNews(): Single<List<News>>
 }

@@ -14,12 +14,6 @@
         android:theme="@style/Theme.BrandedLaunch">
         <activity android:name=".ui.NewsActivity">
 
-        </activity>
-
-        <activity
-            android:name=".ui.SplashActivity"
-            android:theme="@style/Theme.BrandedLaunch">
-
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

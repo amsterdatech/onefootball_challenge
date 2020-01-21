@@ -13,7 +13,13 @@ import org.koin.core.qualifier.named
 import org.koin.dsl.module
 
 val repositoryModule = module {
-    single(named(LOCAL_SOURCE)) { NewsLocalDataSource(get(), androidContext()) }
+    single(named(LOCAL_SOURCE)) {
+        NewsLocalDataSource(
+            get(),
+            androidContext(),
+            get(named(IO_SCHEDULER))
+        )
+    }
     factory { CompositeDisposable() }
     single(named(IO_SCHEDULER)) { Schedulers.io() }
     single(named(MAIN_SCHEDULER)) { AndroidSchedulers.mainThread() }
