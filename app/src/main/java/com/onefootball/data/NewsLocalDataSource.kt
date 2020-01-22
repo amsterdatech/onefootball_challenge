@@ -16,21 +16,23 @@ class NewsLocalDataSource(
     NewsRepository {
 
     override fun getNews(): Single<List<News>> {
-        val apiResponse = serializer.fromJson(
-            context.loadJsonStringFromFile(),
-            ApiResponse::class.java
-        )
+        return Single.fromCallable {
+            val apiResponse = serializer.fromJson(
+                context.loadJsonStringFromFile(),
+                ApiResponse::class.java
+            )
 
-        return Single.just(apiResponse.news
-            .map {
-                News(
-                    it.title,
-                    it.imageURL,
-                    it.resourceName,
-                    it.resourceURL,
-                    it.newsLink
-                )
-            }
-        ).subscribeOn(ioScheduler)
+            apiResponse.news
+                .map {
+                    News(
+                        it.title,
+                        it.imageURL,
+                        it.resourceName,
+                        it.resourceURL,
+                        it.newsLink
+                    )
+                }
+        }
+            .subscribeOn(ioScheduler)
     }
 }
